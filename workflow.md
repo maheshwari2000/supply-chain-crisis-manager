@@ -44,5 +44,13 @@ Query 4:
 
 Deploying on EC2
 - Create a instance
-- Add Custom TCP with port 8501
+- Add Custom TCP with port 8501 in Inbound Rules
+- sudo su
+- yum update
+- yum install git
+- git clone https://github.com/maheshwari2000/supply-chain-crisis-manager.git
+- yum install python3-pip
+- python3 -m pip install --ignore-installed -r requirements.txt
+- python3 -m streamlit run newapp.py
+- nohup python3 -m streamlit run newapp.py
 - git clone the repo/create a app.py file and copy paste streamlit code
