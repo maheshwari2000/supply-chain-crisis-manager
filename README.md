@@ -3,6 +3,25 @@
 
 An AI-powered supply chain risk management and crisis response system built using AWS Bedrock Agent, leveraging the power of LLMs for real-time decision making and crisis management.
 
+```
+.
+├── AgentGroupFunctions.json    (Agent Functions to add in Bedrock Agent)
+├── Architecture.png            (AWS Style Architecture Diagram)
+├── BedrockAgentPrompt.txt      (Supply Chain Agent Prompt)
+├── Dockerfile                  (Dockerfile to create Docker Image)
+├── README.md                   (Readme File - contains project description)
+├── alternatives.json           (Alternative DATABASE)
+├── app.py                      (Streamlit App - Main)
+├── dashboard.py                (Testing Streamlit - Dashboard Version)
+├── lambda1.py                  (AWS Lambda Code)
+├── location_risks.json         (Location DATABASE)
+├── newapp.py                   (Testing Streamlit - Version 1)
+├── requirements.txt            (Requirements File)
+├── supplier_risks.json         (Supplier DATABASE)
+├── workflow.md                 (Layman Language Workflow to replicate project)
+└── working.py                  (Testing Streamlit - Version 2)
+```
+
 ## Project Overview
 
 Supply Chain Crisis Manager helps organizations:
