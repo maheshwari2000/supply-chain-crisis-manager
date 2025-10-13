@@ -1,0 +1,318 @@
+#!/usr/bin/env python3
+"""
+Supply Chain Crisis Manager - Minimal Chatbot Interface
+Save as chatbot/app.py
+"""
+
+import streamlit as st
+import boto3
+import time
+from datetime import datetime
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Configure Streamlit page
+st.set_page_config(
+    page_title="Supply Chain Crisis Manager", 
+    page_icon="⚠️",
+    layout="wide"
+)
+
+# Minimal CSS
+st.markdown("""
+<style>
+    .main-header {
+        # background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .chat-container {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 1rem;
+        # background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .user-message {
+        # background: #e3f2fd;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        margin-left: 15%;
+        border-left: 3px solid #2196f3;
+    }
+    
+    .agent-message {
+        # background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        margin-right: 15%;
+        border-left: 3px solid #666;
+    }
+    
+    .system-message {
+        # background: #fff8e1;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        border-left: 3px solid #ffc107;
+        text-align: center;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+class SupplyChainAgent:
+    """Supply Chain Crisis Manager AI Agent"""
+    
+    def __init__(self):
+        self.agent_id = os.getenv('BEDROCK_AGENT_ID')
+        self.agent_alias_id = os.getenv('BEDROCK_AGENT_ALIAS_ID')
+        self.region = os.getenv('AWS_REGION', 'us-east-1')
+        print(self.agent_id)
+        
+        self.bedrock_agent_runtime = boto3.client(
+            'bedrock-agent-runtime', 
+            region_name=self.region
+        )
+    
+    def invoke_agent(self, prompt: str, session_id: str):
+        """Send message to the Bedrock Agent"""
+        
+        try:
+            response = self.bedrock_agent_runtime.invoke_agent(
+                agentId=self.agent_id,
+                agentAliasId=self.agent_alias_id,
+                sessionId=session_id,
+                inputText=prompt
+            )
+            
+            # Process streaming response
+            full_response = ""
+            for event in response['completion']:
+                if 'chunk' in event:
+                    chunk = event['chunk']
+                    if 'bytes' in chunk:
+                        chunk_text = chunk['bytes'].decode('utf-8')
+                        full_response += chunk_text
+            
+            return {
+                "response": full_response,
+                "success": True,
+                "timestamp": datetime.now()
+            }
+            
+        except Exception as e:
+            return {
+                "response": f"Error: {str(e)}",
+                "success": False,
+                "timestamp": datetime.now()
+            }
+
+# Initialize session state
+if 'messages' not in st.session_state:
+    st.session_state.messages = []
+
+if 'session_id' not in st.session_state:
+    st.session_state.session_id = f"session-{int(time.time())}"
+
+if 'agent' not in st.session_state:
+    st.session_state.agent = SupplyChainAgent()
+
+def display_header():
+    """Display the main header"""
+    
+    st.markdown("""
+    <div class="main-header">
+        <h1>Supply Chain Crisis Manager</h1>
+        <p>AI Agent for Electronics Supply Chain Risk Management</p>
+        <small>Powered by Amazon Bedrock AgentCore</small>
+    </div>
+    """, unsafe_allow_html=True)
+
+def display_quick_actions():
+    """Display quick action buttons"""
+    
+    st.subheader("Quick Actions")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        if st.button("Analyze TSMC Risk"):
+            handle_quick_action("Analyze the risk level for TSMC supplier in Taiwan")
+    
+    with col2:
+        if st.button("Taiwan Earthquake Impact"):
+            handle_quick_action("A 7.2 earthquake hit Taiwan affecting TSMC. Analyze impact and provide recommendations.")
+    
+    with col3:
+        if st.button("Find Alternatives"):
+            handle_quick_action("Find alternative suppliers for semiconductors if TSMC is affected")
+    
+    with col4:
+        if st.button("Procurement Plan"):
+            handle_quick_action("Generate procurement recommendations for a crisis affecting TSMC with critical urgency")
+
+def handle_quick_action(prompt):
+    """Handle quick action button clicks"""
+    
+    # Add user message
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt,
+        "timestamp": datetime.now()
+    })
+    
+    # Get agent response
+    with st.spinner("Agent is analyzing..."):
+        response = st.session_state.agent.invoke_agent(prompt, st.session_state.session_id)
+    
+    # Add agent response
+    st.session_state.messages.append({
+        "role": "agent",
+        "content": response["response"],
+        "success": response["success"],
+        "timestamp": response["timestamp"]
+    })
+    
+    st.rerun()
+
+def display_chat_interface():
+    """Display the main chat interface"""
+    
+    chat_container = st.container()
+    
+    with chat_container:
+        st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+        
+        if not st.session_state.messages:
+            st.markdown('''
+            <div class="system-message">
+                Welcome! I'm your Supply Chain Crisis Manager AI Agent.<br>
+                I can help you analyze risks, assess crisis impacts, and provide procurement recommendations.<br>
+                Ask me anything about supply chain management.
+            </div>
+            ''', unsafe_allow_html=True)
+        
+        # Display messages
+        for message in st.session_state.messages:
+            timestamp = message["timestamp"].strftime("%H:%M:%S")
+            
+            if message["role"] == "user":
+                st.markdown(f'''
+                <div class="user-message">
+                    <strong>You</strong> <small>({timestamp})</small><br>
+                    {message["content"]}
+                </div>
+                ''', unsafe_allow_html=True)
+            
+            elif message["role"] == "agent":
+                st.markdown(f'''
+                <div class="agent-message">
+                    <strong>Agent</strong> <small>({timestamp})</small><br>
+                    {message["content"]}
+                </div>
+                ''', unsafe_allow_html=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+
+def display_chat_input():
+    """Display chat input interface"""
+    
+    col1, col2 = st.columns([4, 1])
+    
+    with col1:
+        user_input = st.text_input(
+            "Ask about supply chain risks, crisis analysis, or procurement recommendations:",
+            placeholder="e.g., What's the risk level for Samsung in South Korea?",
+            key="chat_input"
+        )
+    
+    with col2:
+        send_button = st.button("Send", type="primary")
+    
+    # Handle input
+    if send_button and user_input:
+        # Add user message
+        st.session_state.messages.append({
+            "role": "user",
+            "content": user_input,
+            "timestamp": datetime.now()
+        })
+        
+        # Get agent response
+        with st.spinner("Agent is processing..."):
+            response = st.session_state.agent.invoke_agent(user_input, st.session_state.session_id)
+        
+        # Add agent response
+        st.session_state.messages.append({
+            "role": "agent",
+            "content": response["response"],
+            "success": response["success"],
+            "timestamp": response["timestamp"]
+        })
+        
+        st.rerun()
+
+def display_sidebar():
+    """Display sidebar with controls"""
+    
+    st.sidebar.header("Agent Controls")
+    
+    st.sidebar.text(f"Session: {st.session_state.session_id[:8]}...")
+    st.sidebar.text(f"Messages: {len(st.session_state.messages)}")
+    
+    if st.sidebar.button("Clear Chat"):
+        st.session_state.messages = []
+        st.rerun()
+    
+    if st.sidebar.button("New Session"):
+        st.session_state.session_id = f"session-{int(time.time())}"
+        st.session_state.messages = []
+        st.rerun()
+    
+    st.sidebar.header("Capabilities")
+    st.sidebar.markdown("""
+    **I can help with:**
+    - Supplier risk analysis
+    - Crisis impact assessment
+    - Alternative supplier recommendations
+    - Procurement planning
+    - Emergency response actions
+    
+    **Example questions:**
+    - "Analyze risk for TSMC"
+    - "Taiwan earthquake impact"
+    - "Find semiconductor alternatives"
+    - "Generate procurement plan"
+    """)
+    
+    st.sidebar.header("Tech Stack")
+    st.sidebar.markdown("""
+    - Amazon Bedrock AgentCore
+    - Amazon Nova Model
+    - AWS Lambda Functions
+    - Streamlit Interface
+    """)
+
+def main():
+    """Main application"""
+    
+    display_header()
+    display_quick_actions()
+    display_chat_interface()
+    display_chat_input()
+    display_sidebar()
+
+if __name__ == "__main__":
+    main()

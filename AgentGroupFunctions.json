@@ -1,0 +1,84 @@
+{
+    "analyze_supplier_risk": 
+    {
+        "name": "analyze_supplier_risk",
+        "description": "Analyze risk level for a specific electronics supplier",
+        "parameters": {
+            "location": {
+            "description": "Geographic location of the supplier",
+            "required": "False",
+            "type": "string"
+            },
+            "supplier_name": {
+            "description": "Name of the supplier to analyze",
+            "required": "False",
+            "type": "string"
+            }
+        },
+        "requireConfirmation": "DISABLED"
+    },
+    "find_alternative_suppliers": 
+    {
+        "name": "find_alternative_suppliers",
+        "description": "Find alternative suppliers for electronics components",
+        "parameters": {
+            "component": {
+            "description": "Type of component (semiconductors, memory, assembly, etc.)",
+            "required": "False",
+            "type": "string"
+            },
+            "affected_supplier": {
+            "description": "Name of affected supplier to find alternatives for",
+            "required": "False",
+            "type": "string"
+            }
+        },
+        "requireConfirmation": "DISABLED"
+    },
+    "calculate_crisis_impact":
+    {
+        "name": "calculate_crisis_impact",
+        "description": "Calculate business impact of supply chain crisis",
+        "parameters": {
+            "severity": {
+            "description": "Severity level (Low, Medium, High)",
+            "required": "False",
+            "type": "string"
+            },
+            "crisis_type": {
+            "description": "Type of crisis (earthquake, flood, strike, port_closure, geopolitical)",
+            "required": "False",
+            "type": "string"
+            },
+            "affected_region": {
+            "description": "Geographic region affected by crisis",
+            "required": "False",
+            "type": "string"
+            }
+        },
+        "requireConfirmation": "DISABLED"
+    },
+    "generate_procurement_recommendations":
+    {
+        "name": "generate_procurement_recommendations",
+        "description": "Generate procurement recommendations during crisis",
+        "parameters": {
+            "affected_suppliers": {
+            "description": "Comma-separated list of affected supplier names",
+            "required": "False",
+            "type": "string"
+            },
+            "urgency": {
+            "description": "Urgency level (Low, Medium, High, Critical)",
+            "required": "False",
+            "type": "string"
+            },
+            "crisis_type": {
+            "description": "Type of crisis occurring",
+            "required": "False",
+            "type": "string"
+            }
+        },
+        "requireConfirmation": "DISABLED"
+    }
+}

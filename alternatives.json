@@ -1,0 +1,42 @@
+{
+  "semiconductors": [
+    {"name": "Intel", "location": "USA", "capacity": "High", "lead_time": "12-16 weeks"},
+    {"name": "Samsung", "location": "South Korea", "capacity": "High", "lead_time": "10-14 weeks"},
+    {"name": "GlobalFoundries", "location": "USA/Europe", "capacity": "Medium", "lead_time": "14-18 weeks"},
+    {"name": "TSMC", "location": "Taiwan", "capacity": "Very High", "lead_time": "8-12 weeks"},
+    {"name": "SMIC", "location": "China", "capacity": "Medium", "lead_time": "16-22 weeks"}
+  ],
+  "memory": [
+    {"name": "Samsung", "location": "South Korea", "capacity": "High", "lead_time": "8-12 weeks"},
+    {"name": "Micron", "location": "USA", "capacity": "High", "lead_time": "10-14 weeks"},
+    {"name": "SK Hynix", "location": "South Korea", "capacity": "Medium", "lead_time": "10-16 weeks"},
+    {"name": "Kioxia", "location": "Japan", "capacity": "Medium", "lead_time": "12-18 weeks"},
+    {"name": "Western Digital", "location": "USA/Japan", "capacity": "High", "lead_time": "10-14 weeks"}
+  ],
+  "assembly": [
+    {"name": "Foxconn", "location": "China", "capacity": "High", "lead_time": "6-10 weeks"},
+    {"name": "Pegatron", "location": "Taiwan/India", "capacity": "High", "lead_time": "8-12 weeks"},
+    {"name": "Wistron", "location": "India", "capacity": "Medium", "lead_time": "10-14 weeks"},
+    {"name": "Flextronics", "location": "Global", "capacity": "High", "lead_time": "6-10 weeks"},
+    {"name": "Jabil", "location": "Vietnam/Mexico", "capacity": "High", "lead_time": "8-10 weeks"}
+  ],
+  "battery_cells": [
+    {"name": "CATL", "location": "China", "capacity": "Very High", "lead_time": "6-8 weeks"},
+    {"name": "LG Energy Solution", "location": "South Korea", "capacity": "High", "lead_time": "8-12 weeks"},
+    {"name": "Panasonic", "location": "Japan/USA", "capacity": "Medium", "lead_time": "10-14 weeks"},
+    {"name": "Northvolt", "location": "Sweden", "capacity": "Growing", "lead_time": "12-18 weeks"}
+  ],
+  "raw_materials": [
+    {"name": "BHP Group", "location": "Australia", "capacity": "High", "lead_time": "16-20 weeks"},
+    {"name": "Rio Tinto", "location": "Australia/UK", "capacity": "High", "lead_time": "14-18 weeks"},
+    {"name": "Glencore", "location": "Switzerland", "capacity": "Medium", "lead_time": "12-16 weeks"},
+    {"name": "Vale", "location": "Brazil", "capacity": "High", "lead_time": "14-20 weeks"}
+  ],
+  "logistics": [
+    {"name": "Maersk", "location": "Global", "capacity": "Very High", "lead_time": "2-4 weeks"},
+    {"name": "DHL Supply Chain", "location": "Global", "capacity": "High", "lead_time": "1-3 weeks"},
+    {"name": "FedEx Logistics", "location": "Global", "capacity": "High", "lead_time": "1-2 weeks"},
+    {"name": "Kuehne+Nagel", "location": "Europe/Asia", "capacity": "High", "lead_time": "2-4 weeks"},
+    {"name": "UPS Supply Chain", "location": "North America/Europe", "capacity": "Medium", "lead_time": "2-3 weeks"}
+  ]
+}

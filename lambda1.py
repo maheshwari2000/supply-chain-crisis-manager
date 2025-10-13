@@ -7,6 +7,12 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+def load_json_from_s3(key):
+    s3 = boto3.client('s3')
+    obj = s3.get_object(Bucket="supplier-risk-data", Key=key)
+    data = obj['Body'].read().decode('utf-8')
+    return json.loads(data)
+
 def lambda_handler(event, context):
     """
     Supply Chain Risk Analyzer for Bedrock Agent Action Group
@@ -95,25 +101,27 @@ def analyze_supplier_risk(params):
     supplier_name = params.get('supplier_name', 'Unknown')
     location = params.get('location', 'Unknown')
     
-    # Mock supplier risk database (in real implementation, this would query DynamoDB)
-    supplier_risks = {
-        'TSMC': {'risk_score': 85, 'reason': 'High geographic concentration in Taiwan, earthquake risk'},
-        'Samsung': {'risk_score': 45, 'reason': 'Diversified locations, stable operations'},
-        'Foxconn': {'risk_score': 60, 'reason': 'China dependency, labor issues'},
-        'Intel': {'risk_score': 25, 'reason': 'US-based, multiple facilities'},
-        'SK Hynix': {'risk_score': 50, 'reason': 'South Korea concentration'},
-        'Micron': {'risk_score': 30, 'reason': 'Multiple global locations'}
-    }
+    # # Mock supplier risk database (in real implementation, this would query DynamoDB)
+    # supplier_risks = {
+    #     'TSMC': {'risk_score': 85, 'reason': 'High geographic concentration in Taiwan, earthquake risk'},
+    #     'Samsung': {'risk_score': 45, 'reason': 'Diversified locations, stable operations'},
+    #     'Foxconn': {'risk_score': 60, 'reason': 'China dependency, labor issues'},
+    #     'Intel': {'risk_score': 25, 'reason': 'US-based, multiple facilities'},
+    #     'SK Hynix': {'risk_score': 50, 'reason': 'South Korea concentration'},
+    #     'Micron': {'risk_score': 30, 'reason': 'Multiple global locations'}
+    # }
     
-    # Calculate risk based on location
-    location_risks = {
-        'Taiwan': 85,
-        'China': 70,
-        'South Korea': 45,
-        'Japan': 35,
-        'USA': 20,
-        'Europe': 25
-    }
+    # # Calculate risk based on location
+    # location_risks = {
+    #     'Taiwan': 85,
+    #     'China': 70,
+    #     'South Korea': 45,
+    #     'Japan': 35,
+    #     'USA': 20,
+    #     'Europe': 25
+    # }
+    supplier_risks = load_json_from_s3('supplier_risks.json')
+    location_risks = load_json_from_s3('location_risks.json')
     
     base_risk = supplier_risks.get(supplier_name, {'risk_score': 50, 'reason': 'Unknown supplier'})
     location_risk = location_risks.get(location, 50)
@@ -137,23 +145,24 @@ def find_alternative_suppliers(params):
     affected_supplier = params.get('affected_supplier', 'Unknown')
     
     # Mock alternative supplier database
-    alternatives = {
-        'semiconductors': [
-            {'name': 'Intel', 'location': 'USA', 'capacity': 'High', 'lead_time': '12-16 weeks'},
-            {'name': 'Samsung', 'location': 'South Korea', 'capacity': 'High', 'lead_time': '10-14 weeks'},
-            {'name': 'GlobalFoundries', 'location': 'USA/Europe', 'capacity': 'Medium', 'lead_time': '14-18 weeks'}
-        ],
-        'memory': [
-            {'name': 'Samsung', 'location': 'South Korea', 'capacity': 'High', 'lead_time': '8-12 weeks'},
-            {'name': 'Micron', 'location': 'USA', 'capacity': 'High', 'lead_time': '10-14 weeks'},
-            {'name': 'SK Hynix', 'location': 'South Korea', 'capacity': 'Medium', 'lead_time': '10-16 weeks'}
-        ],
-        'assembly': [
-            {'name': 'Pegatron', 'location': 'Taiwan/China', 'capacity': 'High', 'lead_time': '6-10 weeks'},
-            {'name': 'Wistron', 'location': 'Taiwan/India', 'capacity': 'Medium', 'lead_time': '8-12 weeks'},
-            {'name': 'Flextronics', 'location': 'Global', 'capacity': 'High', 'lead_time': '6-10 weeks'}
-        ]
-    }
+    # alternatives = {
+    #     'semiconductors': [
+    #         {'name': 'Intel', 'location': 'USA', 'capacity': 'High', 'lead_time': '12-16 weeks'},
+    #         {'name': 'Samsung', 'location': 'South Korea', 'capacity': 'High', 'lead_time': '10-14 weeks'},
+    #         {'name': 'GlobalFoundries', 'location': 'USA/Europe', 'capacity': 'Medium', 'lead_time': '14-18 weeks'}
+    #     ],
+    #     'memory': [
+    #         {'name': 'Samsung', 'location': 'South Korea', 'capacity': 'High', 'lead_time': '8-12 weeks'},
+    #         {'name': 'Micron', 'location': 'USA', 'capacity': 'High', 'lead_time': '10-14 weeks'},
+    #         {'name': 'SK Hynix', 'location': 'South Korea', 'capacity': 'Medium', 'lead_time': '10-16 weeks'}
+    #     ],
+    #     'assembly': [
+    #         {'name': 'Pegatron', 'location': 'Taiwan/China', 'capacity': 'High', 'lead_time': '6-10 weeks'},
+    #         {'name': 'Wistron', 'location': 'Taiwan/India', 'capacity': 'Medium', 'lead_time': '8-12 weeks'},
+    #         {'name': 'Flextronics', 'location': 'Global', 'capacity': 'High', 'lead_time': '6-10 weeks'}
+    #     ]
+    # }
+    alternatives = load_json_from_s3('alternatives.json')
     
     component_alternatives = alternatives.get(component.lower(), [])
     
