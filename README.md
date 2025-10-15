@@ -172,7 +172,7 @@ cp .env.example .env
 # Edit .env with your AWS credentials and Bedrock Agent ID
 
 # 4. Run the application
-streamlit run app.py
+streamlit run Chatbot.py
 ```
 
 ### Environment Variables
@@ -277,7 +277,7 @@ supply-chain-crisis-manager/
 
 ### Option 1: Local Development
 ```bash
-streamlit run app.py
+streamlit run Chatbot.py
 ```
 Access at `http://localhost:8501`
 
@@ -285,7 +285,7 @@ Access at `http://localhost:8501`
 1. Launch EC2 instance (Amazon Linux 2)
 2. Configure security group (allow TCP 8501)
 3. Clone repository and install dependencies
-4. Run with `nohup streamlit run app.py &`
+4. Run with `nohup streamlit run Chatbot.py &`
 
 ### Option 3: Docker + ECS
 1. Build Docker image
