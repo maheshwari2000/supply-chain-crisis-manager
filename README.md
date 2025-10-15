@@ -148,7 +148,7 @@ requests==2.31.0
 
 ---
 
-## 📋 Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 
