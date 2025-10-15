@@ -330,7 +330,7 @@ def display_header():
     <div class="main-header">
         <h1>Supply Chain Crisis Manager</h1>
         <p>AI Agent for Electronics Supply Chain Risk Management</p>
-        <small>Created by Sagar Maheshwari</small>
+        <small>ⓘ AI can make mistakes. Please double check info.</small>
     </div>
     """, unsafe_allow_html=True)
 
@@ -485,19 +485,29 @@ def display_sidebar():
     - Emergency response actions
     
     **Example questions:**
-    - "Analyze risk for TSMC"
-    - "Taiwan earthquake impact"
-    - "Find semiconductor alternatives"
-    - "Generate procurement plan"
+    - "Analyze supplier risk for NVIDIA in Taiwan"
+    - "Find alternative semiconductor suppliers for TSMC"
+    - "Generate procurement recommendations if Foxconn is affected by a strike."
     """)
     
     st.sidebar.header("Tech Stack")
     st.sidebar.markdown("""
-    - Amazon Bedrock AgentCore
+    - Amazon Bedrock
     - Amazon Nova Model
     - AWS Lambda Functions
+    - AWS S3 
     - Streamlit Interface
     """)
+
+    st.sidebar.markdown("---")
+    # Developer Info
+    st.sidebar.info(
+        """
+        **👨‍💻 Developed by: Sagar Maheshwari**  
+        🔗 [LinkedIn](https://www.linkedin.com/in/sagar--maheshwari)  
+        💻 [GitHub](https://github.com/maheshwari2000)
+        """
+    )
 
 def main():
     """Main application"""
